@@ -1,0 +1,46 @@
+version: "2"
+
+services:
+  zookeeper:
+    container_name: zookeeper
+    image: docker.io/bitnami/zookeeper:3.8
+    ports:
+      - "2181:2181"
+    volumes:
+      - "zookeeper_data:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    privileged: true
+  kafka:
+    container_name: kafka
+    image: docker.io/bitnami/kafka:3.2
+    ports:
+      - "9092:9092"
+    volumes:
+      - "kafka_data:/bitnami"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      # 암호화 되지 않은 텍스트 전송을 허용함, 보안에 취약할 수 있음
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      # 리스너 이름과 해당 리스너에게 사용할 보안 프로토콜 설정
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9093,EXTERNAL://:9092
+      #- KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9093,EXTERNAL://localhost:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9093,EXTERNAL://192.168.127.38:9092
+      #- KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9093,PLAINTEXT://192.168.127.38:9092
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
+      - KAFKA_CREATE_TOPICS="test:1:1"
+    depends_on:
+      - zookeeper
+    privileged: true
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local
+
+#networks:
+#  default:
+#    external:
+#      name: hadoop_network
