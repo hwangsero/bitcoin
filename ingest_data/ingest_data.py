@@ -13,7 +13,8 @@ def delivery_report(err, msg):
 producer = Producer({'bootstrap.servers': '192.168.127.38:9092'})
 
 def on_message(ws, message):
-    json_data = json.dumps(message)
+    #json_data = json.dumps(message)
+    json_data = message
     producer.poll(0)
     producer.produce("test", json_data, callback=delivery_report)
     producer.flush()
