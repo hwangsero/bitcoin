@@ -16,12 +16,12 @@ def on_message(ws, message):
     #json_data = json.dumps(message)
     json_data = message
     producer.poll(0)
-    producer.produce("test", json_data, callback=delivery_report)
+    producer.produce("coin-prices", json_data, callback=delivery_report)
     producer.flush()
     #time.sleep(1)
 
 if __name__ == "__main__":
     websocket.enableTrace(True)
-    ws = websocket.WebSocketApp("wss://ws.coincap.io/trades/binance",
+    ws = websocket.WebSocketApp("wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoi",
                                 on_message = on_message)
     ws.run_forever()
