@@ -10,13 +10,13 @@ def delivery_report(err, msg):
     else:
         print('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
 
-producer = Producer({'bootstrap.servers': '192.168.127.38:9092'})
+producer = Producer({'bootstrap.servers': '192.168.127.38:9093'})
 
 def on_message(ws, message):
     #json_data = json.dumps(message)
     json_data = message
     producer.poll(0)
-    producer.produce("test3", json_data, callback=delivery_report)
+    producer.produce("coin-trades", json_data, callback=delivery_report)
     producer.flush()
     #time.sleep(1)
 

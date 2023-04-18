@@ -1,46 +1,104 @@
-version: "2"
-
+version: '3'
 services:
-  zookeeper:
-    container_name: zookeeper
-    image: docker.io/bitnami/zookeeper:3.8
-    ports:
-      - "2181:2181"
-    volumes:
-      - "zookeeper_data:/bitnami"
+  zookeeper1:
+    image: docker.io/bitnami/zookeeper:3.8.1
     environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-    privileged: true
-  kafka:
-    container_name: kafka
-    image: docker.io/bitnami/kafka:3.2
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVERS: zookeeper1:2888:3888;zookeeper2:2888:3888;zookeeper3:2888:3888
     ports:
-      - "9092:9092"
-    volumes:
-      - "kafka_data:/bitnami"
+      - "22181:2181"
+
+  zookeeper2:
+    image: docker.io/bitnami/zookeeper:3.8.1
     environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      # 암호화 되지 않은 텍스트 전송을 허용함, 보안에 취약할 수 있음
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      # 리스너 이름과 해당 리스너에게 사용할 보안 프로토콜 설정
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
-      - KAFKA_CFG_LISTENERS=CLIENT://:9093,EXTERNAL://:9092
-      #- KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9093,EXTERNAL://localhost:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9093,EXTERNAL://192.168.127.38:9092
-      #- KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9093,PLAINTEXT://192.168.127.38:9092
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
-      - KAFKA_CREATE_TOPICS="test:1:1"
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVERS: zookeeper1:2888:3888;zookeeper2:2888:3888;zookeeper3:2888:3888
+    ports:
+      - "32181:2181"
+
+  zookeeper3:
+    image: docker.io/bitnami/zookeeper:3.8.1
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVERS: zookeeper1:2888:3888;zookeeper2:2888:3888;zookeeper3:2888:3888
+    ports:
+      - "42181:2181"
+
+  kafka1:
+    container_name: kafka1
+    ports:
+      - "9093:9093"
+    image: docker.io/bitnami/kafka:3.4
     depends_on:
-      - zookeeper
-    privileged: true
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      KAFKA_BROKER_ID: 1
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      KAFKA_CFG_ADVERTISED_LISTENERS: INTERNAL://kafka1:9092,EXTERNAL://192.168.127.38:9093
+      KAFKA_CFG_LISTENERS: INTERNAL://:9092,EXTERNAL://:9093
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+    volumnes:
+      - 'kafka1_data:/bitnami'
+
+  kafka2:
+    container_name: kafka2
+    ports:
+      - "9094:9094"
+    image: docker.io/bitnami/kafka:3.4
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      KAFKA_BROKER_ID: 2
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      KAFKA_CFG_ADVERTISED_LISTENERS: INTERNAL://kafka2:9092,EXTERNAL://192.168.127.38:9094
+      KAFKA_CFG_LISTENERS: INTERNAL://:9092,EXTERNAL://:9094
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+    volumnes:
+      - 'kafka2_data:/bitnami'
+
+  kafka3:
+    container_name: kafka3
+    ports:
+      - "9095:9095"
+    image: docker.io/bitnami/kafka:3.4
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      KAFKA_BROKER_ID: 3
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      KAFKA_CFG_LISTENERS: INTERNAL://:9092,EXTERNAL://:9095
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CFG_ADVERTISED_LISTENERS: INTERNAL://kafka3:9092,EXTERNAL://192.168.127.38:9095
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+    volumnes:
+      - 'kafka3_data:/bitnami'
 
 volumes:
   zookeeper_data:
     driver: local
-  kafka_data:
+  kafka1_data:
     driver: local
-
-#networks:
-#  default:
-#    external:
-#      name: hadoop_network
+  kafka2_data:
+    driver: local
+  kafka3_data:
+    driver: local

@@ -4,10 +4,10 @@ from pyspark.sql.types import StructType, StructField, StringType, FloatType, Lo
 import datetime
 import uuid
 
-kafka_bootstrap_servers = '192.168.127.38:9092'
-topic = 'test3'
+kafka_bootstrap_servers = '192.168.127.38:9093'
+topic = 'coin-trades'
 keyspace = 'bitcoin'
-table = 'trades10'
+table = 'trades'
 
 spark = SparkSession.builder.appName("PySparkShell") \
         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0,com.datastax.spark:spark-cassandra-connector_2.12:3.1.0") \
