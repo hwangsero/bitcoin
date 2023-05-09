@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 import logging
 import requests
@@ -39,7 +39,8 @@ def upload_dataframe_to_gcs(df: pd.DataFrame, bucket_name: str, destination_blob
 
 def main() -> None:
     market_data = collect_market_data()
-    current_date = datetime.now().strftime("%Y-%m-%d")
+#    current_date = datetime.now().strftime("%Y-%m-%d")
+    current_date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
 
     bucket_name = "coin-bucket"
     destination_blob_name = f"{current_date}_markets.csv"

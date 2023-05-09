@@ -24,7 +24,6 @@ def generate_timestamp():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 def main() -> None:
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/srhwang/Project/boot_camp/zoomcamp/coin-385610-ab42e26c1279.json"
     current_date = datetime.now().strftime("%Y-%m-%d")
 
     bucket_name = "coin-bucket"
