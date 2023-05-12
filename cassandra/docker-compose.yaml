@@ -1,20 +1,52 @@
-version: '3.8'
+version: '3'
 
 services:
-  cassandra:
+  cassandra-1:
     image: cassandra:4.0
-    container_name: cassandra
+    container_name: cassandra-1
     ports:
       - "9042:9042"
     volumes:
-      - cassandra-data:/var/lib/cassandra
+      - cassandra-1_data:/var/lib/cassandra
     environment:
-      - CASSANDRA_CLUSTER_NAME=my_cassandra_cluster
+      - CASSANDRA_CLUSTER_NAME=cassandra_cluster
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
       - CASSANDRA_DC=datacenter1
       - CASSANDRA_RACK=rack1
-      - CASSANDRA_SEEDS=cassandra
+
+  cassandra-2:
+    image: cassandra:4.0
+    container_name: cassandra-2
+    volumes:
+      - cassandra-2_data:/var/lib/cassandra
+    depends_on:
+      - cassandra-1
+    environment:
+      - CASSANDRA_CLUSTER_NAME=cassandra_cluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_SEEDS=cassandra-1
+
+  cassandra-3:
+    image: cassandra:4.0
+    container_name: cassandra-3
+    volumes:
+      - cassandra-3_data:/var/lib/cassandra
+    depends_on:
+      - cassandra-1
+    environment:
+      - CASSANDRA_CLUSTER_NAME=cassandra_cluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_SEEDS=cassandra-1
 
 volumes:
-  cassandra-data:
+  cassandra-1_data:
+    driver: local
+  cassandra-2_data:
+    driver: local
+  cassandra-3_data:
+    driver: local
 
