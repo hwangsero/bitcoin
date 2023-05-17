@@ -1,21 +1,21 @@
 version: '3'
 services:
   zookeeper-1:
-    image: confluentinc/cp-zookeeper:5.5.1
+    image: confluentinc/cp-zookeeper:7.4.0
     ports:
       - '32181:32181'
     environment:
       ZOOKEEPER_CLIENT_PORT: 32181
       ZOOKEEPER_TICK_TIME: 2000
+#    volumes:
+#      - zookeeper_data:/var/lib/zookeeper/data
 
 
   kafka-1:
     container_name: kafka-1
-    image: confluentinc/cp-kafka:5.5.1
+    image: confluentinc/cp-kafka:7.4.0
     ports:
       - '9092:9092'
-    depends_on:
-      - zookeeper-1
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:32181
@@ -24,15 +24,18 @@ services:
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-1:29092,EXTERNAL://192.168.127.38:9092
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_NUM_PARTITIONS: 3
+      KAFKA_LOG_RETENTION_HOURS: 24
+#    volumes:
+#      - kafka-1_data:/var/lib/kafka/data 
+    depends_on:
+      - zookeeper-1
 
 
   kafka-2:
     container_name: kafka-2
-    image: confluentinc/cp-kafka:5.5.1
+    image: confluentinc/cp-kafka:7.4.0
     ports:
       - '9093:9093'
-    depends_on:
-      - zookeeper-1
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:32181
@@ -41,15 +44,18 @@ services:
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-2:29093,EXTERNAL://192.168.127.38:9093
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_NUM_PARTITIONS: 3
+      KAFKA_LOG_RETENTION_HOURS: 24
+#    volumes:
+#      - kafka-2_data:/var/lib/kafka/data 
+    depends_on:
+      - zookeeper-1
     
 
   kafka-3:
     container_name: kafka-3
-    image: confluentinc/cp-kafka:5.5.1
+    image: confluentinc/cp-kafka:7.4.0
     ports:
       - '9094:9094'
-    depends_on:
-      - zookeeper-1
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:32181
@@ -58,4 +64,22 @@ services:
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-3:29094,EXTERNAL://192.168.127.38:9094
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_NUM_PARTITIONS: 3
+      KAFKA_LOG_RETENTION_HOURS: 24
+#    volumes:
+#      - kafka-3_data:/var/lib/kafka/data 
+    depends_on:
+      - zookeeper-1
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka-1_data:
+    driver: local
+  kafka-2_data:
+    driver: local
+  kafka-3_data:
+    driver: local
+
+
+
 
