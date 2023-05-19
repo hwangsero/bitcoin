@@ -46,6 +46,7 @@ class CoinMarketProcessor:
     @udf(returnType=TimestampType())
     def generate_timestamp():
         return datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
+       # return datetime.now()
 
     def create_spark_session(self) -> SparkSession:
         spark_session = SparkSession.builder \
@@ -72,11 +73,6 @@ class CoinMarketProcessor:
         df = df.withColumn("uuid", CoinMarketProcessor.generate_uuid())
         df = df.withColumn("timestamp", CoinMarketProcessor.generate_timestamp())
         return df
-        """ 
-        df = df.withColumn("volume_usd_24_hr", df['volume_usd_24_hr'].cast(FloatType()))
-        df = df.withColumn("price_usd", df['price_usd'].cast(FloatType()))
-        df = df.withColumn("volume_percent", df['volume_percent'].cast(FloatType()))
-        """
 
     def write_to_bigquery(self, df: DataFrame) -> None:
         df.write \

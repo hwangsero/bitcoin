@@ -59,6 +59,7 @@ class CoinPriceProcessor:
             .option("subscribe", self.kafka_consumer_config.topic) \
             .option("failOnDataLoss", "False") \
             .option("maxOffsetsPerTrigger", "100") \
+            .schema(self.schema) \
             .load()
         return df
     def transform_coin_prices(self, df: DataFrame) -> DataFrame:
@@ -103,7 +104,7 @@ def load_config(config_path: str):
         return config
 
 def main() -> None:
-    config = load_config('config.json')
+    config = load_config('processing_data/config.json')
     cassandra_config = CassandraConfig(**config["cassandra_config"])
     kafka_consumer_config = KafkaConsumerConfig(
         bootstrap_servers='192.168.127.38:9092',

@@ -57,7 +57,9 @@ class CoinTradeProcessor:
             .config("spark.cassandra.connection.port", self.cassandra_config.port) \
             .config("spark.cassandra.auth.username", self.cassandra_config.username) \
             .config("spark.cassandra.auth.password", self.cassandra_config.password) \
+            .config("spark.cassandra.connection.timeoutMS", "50000") \
             .getOrCreate()
+        #spark_session.sparkContext.setLogLevel('DEBUG')
         return spark_session
 
     def read_stream_from_kafka(self) -> DataFrame:
@@ -91,6 +93,7 @@ class CoinTradeProcessor:
             .option("table", "trades") \
             .option("ttl", "3600") \
             .save()
+#            .option("spark.cassandra.output.consistency.level","ONE") \
 
     def write_stream_to_cassandra(self, df: DataFrame) -> None:
         query = df \
@@ -111,7 +114,7 @@ def load_config(config_path: str):
         return config
 
 def main() -> None:
-    config = load_config('config.json')
+    config = load_config('processing_data/config.json')
     cassandra_config = CassandraConfig(**config["cassandra_config"])
     kafka_consumer_config = KafkaConsumerConfig(
         bootstrap_servers='192.168.127.38:9092',
