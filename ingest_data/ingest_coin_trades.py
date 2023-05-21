@@ -21,7 +21,7 @@ class KafkaProducer():
 
 def main() -> None:
     websocket.enableTrace(True)
-    kafka_producer = KafkaProducer('192.168.127.38:9092')
+    kafka_producer = KafkaProducer('192.168.127.38:9092,192.168.127.38:9093,192.168.127.38:9094')
     ws = websocket.WebSocketApp("wss://ws.coincap.io/trades/binance",
                                 on_message = kafka_producer.send_message_to_kafka)
     ws.run_forever()

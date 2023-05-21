@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  cassandra-1:
+    image: cassandra:latest
+    container_name: cassandra-1
+    ports:
+      - 9042:9042
+      - 7000:7000
+    volumes:
+      - cassandra-1_data_single:/var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=cassandra_cluster
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack1
+      #- CASSANDRA_SEEDS=192.168.127.35,192.168.127.38,192.168.127.52
+      - CASSANDRA_SEEDS=192.168.127.35,192.168.127.38
+      - CASSANDRA_LISTEN_ADDRESS=cassandra-1
+      - CASSANDRA_BROADCAST_ADDRESS=192.168.127.38
+
+volumes:
+  cassandra-1_data_single:
+    driver: local

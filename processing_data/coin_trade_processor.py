@@ -53,7 +53,7 @@ class CoinTradeProcessor:
         spark_session = SparkSession.builder.appName("coin-trades") \
             .config("spark.jars.packages",
                     "org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0,com.datastax.spark:spark-cassandra-connector_2.12:3.1.0") \
-            .config("spark.cassandra.connection.host", self.cassandra_config.host) \
+            .config("spark.cassandra.connection.host", '192.168.127.38,192.168.127.35') \
             .config("spark.cassandra.connection.port", self.cassandra_config.port) \
             .config("spark.cassandra.auth.username", self.cassandra_config.username) \
             .config("spark.cassandra.auth.password", self.cassandra_config.password) \
@@ -98,9 +98,13 @@ class CoinTradeProcessor:
     def write_stream_to_cassandra(self, df: DataFrame) -> None:
         query = df \
             .writeStream \
-            .outputMode("append") \
-            .foreachBatch(self.save_batch_to_cassandra) \
+            .format("console") \
             .start()
+        #query = df \
+        #    .writeStream \
+        #    .outputMode("update") \
+        #    .foreachBatch(self.save_batch_to_cassandra) \
+        #    .start()
         query.awaitTermination()
     def process(self) -> None:
         extract_coin_trades = self.read_stream_from_kafka()
@@ -117,7 +121,7 @@ def main() -> None:
     config = load_config('processing_data/config.json')
     cassandra_config = CassandraConfig(**config["cassandra_config"])
     kafka_consumer_config = KafkaConsumerConfig(
-        bootstrap_servers='192.168.127.38:9092',
+        bootstrap_servers='192.168.127.38:9092,192.168.127.38:9093,192.168.127.38:9094',
         consumer_group='coin-trades-group',
         topic='coin-trades'
     )
