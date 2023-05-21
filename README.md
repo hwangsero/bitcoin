@@ -27,7 +27,6 @@
 - kafka 브로커들의 RETENTION_HOURS 설정, cassandra db 적재시 TTL 설정, GCS bucket의 TTL 설정
 
 
----
 ## Kafka
 #### Kafka cluster
 - 3개의 서버, 3개의 노드로 클러스터 구성
@@ -49,7 +48,7 @@
 > 주키퍼는 분산 애플리케이션에서의 메타 데이터 관리, 동기화, 그룹서비스 등을 제공함, 주키퍼를 이용해 브로커 상태를 추적하고 토픽 및 파티션 메타데이터를 저장한다.
 > 주키퍼 앙상블은 가용성과 내 결함성을 위해 최소 3개 이상의 홀수로 구성하는 것이 좋다. 주키퍼는 쿼럼(quorum, 과반수) 기반 시스템으로 서비스를 계속 제공하기 위해 쿼럼을 유지해야한다. ex) 2개의 노드에서 하나가 실패하면, 쿼럼을 유지할 수 없게 되어 서비스가 중단된다.
 
-#### cassandra 클러스터
+## Cassandra
 - 카산드라를 왜 선택했는가
 - 3개의 노드(가용성, 로드 밴런싱)
 -- master slave 구조가 아닌 동등함, 쓰기 분산을 위해
@@ -57,11 +56,11 @@
 - 일관성 level은 ~~한 이유로 이렇게 유지(처리량 중심)
 
 
-#### Spark
+## Spark
 - 스파크 ui를 보면서 ~~한 최적화
 - 
 
-#### grafana
+## Grafana
 - 실시간 스트림 데이터를 저장하는 Cassandra와 배치 데이터를 보관하는 Bigquery의 데이터를 단일 대시보드를 구성 
 - 어떠한 시각화 툴을 사용할 지 요금 및 Cassandra, Bigquery 연동 여부를 고려하여 결정
 
@@ -73,7 +72,7 @@
 | Kibana | **무료** | X | **O** |  
 
 
-### bigquery
+## Bigquery
 - 빅쿼리 파티션 어떻게 구성했음
 -
 Markdown is a lightweight markup language based on the formatting conventions
