@@ -10,8 +10,8 @@
 - ✨Magic ✨
 
 
-#### 파이프라인 아키텍쳐
-[이미지]
+#### 데이터 플랫폼 아키텍쳐
+![data_platform_architecture](./data_platform_architecture.png)
 
 #### Key Element 1. 스트리밍, 배치 코인 데이터 수집 파이프라인 구축
 - 실시간 코인 거래랑 가격 정보와 최근 24시간 동안의 거래소 별 코인 데이터 수집 파이프 라인 구축
@@ -63,17 +63,16 @@
 - 
 
 #### grafana
-- ~~한 이유로 그라파나 선택(선택지 ~~~가 있었음)
-- 이렇게 실시간과 스트림 데이터(카산드라 빅쿼리 데이터 가져올 수 있게 대시보드)
+실시간 스트림 데이터를 저장하는 Cassandra와 배치 데이터를 보관하는 Bigquery의 데이터를 단일 대시보드를 구성 
+어떠한 시각화 툴을 사용할 지 요금 및 Cassandra, Bigquery 연동 여부를 고려하여 결정
 
-| 제품 | 유료, 무료 |
-| ------ | ------ |
-| Dropbox | [plugins/dropbox/README.md][PlDb] |
-| GitHub | [plugins/github/README.md][PlGh] |
-| Google Drive | [plugins/googledrive/README.md][PlGd] |
-| OneDrive | [plugins/onedrive/README.md][PlOd] |
-| Medium | [plugins/medium/README.md][PlMe] |
-| Google Analytics | [plugins/googleanalytics/README.md][PlGa] |
+| 제품 | 요금 | cassandra 연동 | bigquery 연동 |
+| ------ | :------: | :------: | :------: |
+| Superset | **무료** | X | **O** |  
+| Tableau | 유료 | **O** | **O** |  
+| **Grafana** | **무료** | **O** | **O** |  
+| Kibana | **무료** | X | **O** |  
+
 
 ### bigquery
 - 빅쿼리 파티션 어떻게 구성했음
