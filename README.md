@@ -29,19 +29,19 @@
 
 
 ---
-#### Kafka
-##### Kafka cluster
+## Kafka
+#### Kafka cluster
 - 3개의 서버, 3개의 노드로 클러스터 구성
 - 카프카: 내결함성, 로드밸런싱을 통한 처리량 증가
 - 주키퍼: 주키퍼의 쿼럼 기반 시스템으로 인해 가용성을 위해 주키퍼 앙상블을 3개의 노드로 구성
-##### Data Lifecycle
+#### Data Lifecycle
 - RETENTION_HOURS을 24로 설정함으로 인해 최근 24시간 동안의 데이터만 보관
-##### Topic Replication Factor 
+#### Topic Replication Factor 
 - topic replication factor가 2일 경우: 1개의 노드 장애 발생 시 데이터 유실 없음, 2개의 노드 장애 발생시 데이터 유실 발생
 - topic replication factor가 3일 경우: 2개의 노드 장애 발생시에도 데이터 유실 없음
 - 데이터 유실과 서버 리소스 사용 사이의 trade off를 고려해 topic replication을 2로 설정
 - topic replication factor ⬆: 브로커의 장애 시 데이터 유실 확률 ️⬇️, 디스크 저장 공간 사용⬆, 네트워크 트래픽⬆
-##### Producer Ack
+#### Producer Ack
 - 실시간 스트림 데이터의 토픽의 경우 처리량이 중요하지만 리더 파티션에 적상적으로 적재되었는지 최소한의 응답을 확인하기 위해 ack = 1(기본값)으로 설정
 
 
