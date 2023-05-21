@@ -10,7 +10,6 @@
 - ✨Magic ✨
 
 
-#### 데이터 플랫폼 아키텍쳐
 ![data_platform_architecture](./data_platform_architecture.png)
 
 #### Key Element 1. 스트리밍, 배치 코인 데이터 수집 파이프라인 구축
@@ -63,8 +62,8 @@
 - 
 
 #### grafana
-실시간 스트림 데이터를 저장하는 Cassandra와 배치 데이터를 보관하는 Bigquery의 데이터를 단일 대시보드를 구성 
-어떠한 시각화 툴을 사용할 지 요금 및 Cassandra, Bigquery 연동 여부를 고려하여 결정
+- 실시간 스트림 데이터를 저장하는 Cassandra와 배치 데이터를 보관하는 Bigquery의 데이터를 단일 대시보드를 구성 
+- 어떠한 시각화 툴을 사용할 지 요금 및 Cassandra, Bigquery 연동 여부를 고려하여 결정
 
 | 제품 | 요금 | cassandra 연동 | bigquery 연동 |
 | ------ | :------: | :------: | :------: |
