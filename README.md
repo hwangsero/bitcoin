@@ -1,7 +1,4 @@
 # Dillinger
-## _The Last Markdown Editor, Ever_
-
-
 
 [코인 프로젝트 개요]
 - Type some Markdown on the left
@@ -9,26 +6,22 @@
 - 3개의 서버(8gb, n core)에 각 플랫폼들의 클러스터를 구성
 - ✨Magic ✨
 
-
-#### 파이프라인 아키텍쳐
-[이미지]
+![data_platform_architecture](./data_platform_architecture.png)
 
 #### Key Element 1. 스트리밍, 배치 코인 데이터 수집 파이프라인 구축
-- 실시간 코인 거래랑 가격 정보와 최근 24시간 동안의 거래소 별 코인 데이터 수집 파이프 라인 구축
-- Drag and drop images (requires your Dropbox account be linked)
-- Import and save files from GitHub, Dropbox, Google Drive and One Drive
+- 실시간 코인 거래, 가격 정보와 최근 24시간 동안의 거래소 별 코인 데이터 수집 파이프라인 구축
+- 데이터 소스에 맞게 파이프라인 설정, 단일 대시보드 구축
 
 #### Key Element 2. 데이터 일관성, 정합성보다 처리량, 가용성
-- 코인 별 실시간 변화량 및 추세를 보기 위함으로 일부 데이터의 유실보다 가용성과 처리성을 중심으로 설계
+- 코인 별 실시간 변화량 및 추세를 보기 위함으로 일부 데이터의 유실보다 가용성과 처리량을 중심으로 설계
 - 3개의 서버, 3개의 노드로 클러스터를 구성하여 가용성, 내결함성 처리
-- produce ack, consistence level을 ~~로 설정함으로 인해 처리성을 중심
+- kafka produce ack, cassandra consistency level을 가용성, 처리량을 중심으로 설정
 
 #### Key Element 3. 데이터 lifecycle을 자동으로 관리
 - 지속적으로 쌓이는 데이터들을 관리하기 위해 데이터의 lifecycle 관리
 - kafka 브로커들의 RETENTION_HOURS 설정, cassandra db 적재시 TTL 설정, GCS bucket의 TTL 설정
 
 
----
 ## Kafka
 #### Kafka cluster
 - 3개의 서버, 3개의 노드로 클러스터 구성
@@ -45,37 +38,34 @@
 - 실시간 스트림 데이터의 토픽의 경우 처리량이 중요하지만 리더 파티션에 적상적으로 적재되었는지 최소한의 응답을 확인하기 위해 ack = 1(기본값)으로 설정
 
 
-> 카프카의 복제본과 내결함성으로 여러 노드에 복제본을 저장해두어 토픽의 리더, 팔로워에서 리더가 죽더라도 다른 팔로워가 리더가 되어 내결함성을 유지할 수 있음
 
-> 주키퍼는 분산 애플리케이션에서의 메타 데이터 관리, 동기화, 그룹서비스 등을 제공함, 주키퍼를 이용해 브로커 상태를 추적하고 토픽 및 파티션 메타데이터를 저장한다.
-> 주키퍼 앙상블은 가용성과 내 결함성을 위해 최소 3개 이상의 홀수로 구성하는 것이 좋다. 주키퍼는 쿼럼(quorum, 과반수) 기반 시스템으로 서비스를 계속 제공하기 위해 쿼럼을 유지해야한다. ex) 2개의 노드에서 하나가 실패하면, 쿼럼을 유지할 수 없게 되어 서비스가 중단된다.
+## Cassandra
+#### Cassandra cluster
+- 3개의 서버, 3개의 노드로 클러스터 구성
+- 클러스터 구성으로 인해 가용성, 쓰기 분산으로 인해 처리량 향상
+- 마스터, 슬레이브 구조가 아닌 분산 아키텍쳐이기 때문에 스케일 아웃 시 쓰기 작업 로드밸런싱
 
-#### cassandra 클러스터
-- 카산드라를 왜 선택했는가
-- 3개의 노드(가용성, 로드 밴런싱)
--- master slave 구조가 아닌 동등함, 쓰기 분산을 위해
-- 파티션 구성
+#### Consistency Level
 - 일관성 level은 ~~한 이유로 이렇게 유지(처리량 중심)
-
-
-#### Spark
+#### Partition
+- pass
+## Spark
 - 스파크 ui를 보면서 ~~한 최적화
 - 
 
-#### grafana
-- ~~한 이유로 그라파나 선택(선택지 ~~~가 있었음)
-- 이렇게 실시간과 스트림 데이터(카산드라 빅쿼리 데이터 가져올 수 있게 대시보드)
+## Grafana
+- 실시간 스트림 데이터를 저장하는 Cassandra와 배치 데이터를 보관하는 Bigquery의 데이터를 단일 대시보드를 구성 
+- 어떠한 시각화 툴을 사용할 지 요금 및 Cassandra, Bigquery 연동 여부를 고려하여 결정
 
-| 제품 | 유료, 무료 |
-| ------ | ------ |
-| Dropbox | [plugins/dropbox/README.md][PlDb] |
-| GitHub | [plugins/github/README.md][PlGh] |
-| Google Drive | [plugins/googledrive/README.md][PlGd] |
-| OneDrive | [plugins/onedrive/README.md][PlOd] |
-| Medium | [plugins/medium/README.md][PlMe] |
-| Google Analytics | [plugins/googleanalytics/README.md][PlGa] |
+| 제품 | 요금 | cassandra 연동 | bigquery 연동 |
+| ------ | :------: | :------: | :------: |
+| Superset | **무료** | X | **O** |  
+| Tableau | 유료 | **O** | **O** |  
+| **Grafana** | **무료** | **O** | **O** |  
+| Kibana | **무료** | X | **O** |  
 
-### bigquery
+
+## Bigquery
 - 빅쿼리 파티션 어떻게 구성했음
 -
 Markdown is a lightweight markup language based on the formatting conventions
@@ -98,6 +88,13 @@ As [John Gruber] writes on the [Markdown site][df1]
 This text you see here is *actually- written in Markdown! To get a feel
 for Markdown's syntax, type some text into the left window and
 watch the results in the right.
+
+
+
+> 카프카의 복제본과 내결함성으로 여러 노드에 복제본을 저장해두어 토픽의 리더, 팔로워에서 리더가 죽더라도 다른 팔로워가 리더가 되어 내결함성을 유지할 수 있음
+
+> 주키퍼는 분산 애플리케이션에서의 메타 데이터 관리, 동기화, 그룹서비스 등을 제공함, 주키퍼를 이용해 브로커 상태를 추적하고 토픽 및 파티션 메타데이터를 저장한다.
+> 주키퍼 앙상블은 가용성과 내 결함성을 위해 최소 3개 이상의 홀수로 구성하는 것이 좋다. 주키퍼는 쿼럼(quorum, 과반수) 기반 시스템으로 서비스를 계속 제공하기 위해 쿼럼을 유지해야한다. ex) 2개의 노드에서 하나가 실패하면, 쿼럼을 유지할 수 없게 되어 서비스가 중단된다.
 
 ## Tech
 
