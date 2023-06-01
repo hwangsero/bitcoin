@@ -2,7 +2,7 @@
 - 실시간 코인 거래, 가격 데이터를 통해 실시간 가격 변동, 거래량을 확인할 수 있는 대시보드 구축
 - 3개의 Mac 서버(8gb, n core) 자원을 활용해 각 플랫폼들의 클러스터를 구성
 
-![data_platform_architecture](./data_platform_architecture.png)
+![data_platform_architecture](./image/data_platform_architecture.png)
 
 #### **Key Element 1. 스트리밍, 배치 코인 데이터 수집 파이프라인 구축**
 - 실시간 코인 거래, 가격 정보와 최근 24시간 동안의 거래소 별 코인 데이터 수집 파이프라인 구축
@@ -33,22 +33,16 @@
 #### Data Lifecycle
 - RETENTION_HOURS을 24로 설정함으로 인해 최근 24시간 동안의 데이터만 보관
 
-
-
 ## Cassandra
 #### Cassandra cluster
 - 3개의 서버, 3개의 노드로 클러스터 구성
 - 클러스터 구성으로 인해 가용성, 쓰기 분산으로 인해 처리량 향상
 - Cassnadra는 마스터, 슬레이브 구조가 아닌 분산 아키텍쳐이기 때문에 스케일 아웃으로 인한 쓰기 작업의 부하 분산
-
 #### Consistency Level
-- 일관성 level은 ~~한 이유로 이렇게 유지(처리량 중심)
-#### Partition
-- pass
-## Spark
-- 스파크 ui를 보면서 ~~한 최적화
-- 
-
+- **Consistency Level**을 **ONE**으로 설정함으로써 최소한 1개의 노드에 쓰기 작업이 성공적으로 수행됨을 확인
+- 최소한의 일관성을 유지하면서 높은 처리량을 수행
+#### Data Lifecycle
+- cassandra에 데이터 적재 시 TTL을 3600초로 설정함으로써 최근 1시간 동안의 데이터만 보관
 ## Grafana
 - 실시간 스트림 데이터를 저장하는 Cassandra와 배치 데이터를 보관하는 Bigquery의 데이터를 단일 대시보드를 구성 
 - 어떠한 시각화 툴을 사용할 지 요금 및 Cassandra, Bigquery 연동 여부를 고려하여 결정
@@ -60,10 +54,10 @@
 | **Grafana** | **무료** | **O** | **O** |  
 | Kibana | **무료** | X | **O** |  
 
+## Coin Dashboard
+![coin_dashboard1](./image/coin_dashboard1.png)
+![coin_dashboard2](./image/coin_dashboard2.png)
 
-## Bigquery
-- 빅쿼리 파티션 어떻게 구성했음
--
 
 ### 플젝하면서 어렸웠던 점
 - 1. 실시간 스트림의 처리량을 감당하는것 (카산드라)
