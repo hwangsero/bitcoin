@@ -17,6 +17,12 @@
 - 지속적으로 쌓이는 데이터들을 관리하기 위해 데이터의 lifecycle 관리
 - kafka 브로커들의 RETENTION_HOURS 설정, cassandra db 적재시 TTL 설정, GCS bucket의 TTL 설정
 
+## Coin Dashboard
+![coin_dashboard1](./image/coin_dashboard1.png)
+![coin_dashboard2](./image/coin_dashboard2.png)
+- 좌측 상단에서 특정 코인을 선택하면 해당 코인에 대한 시각화 대시보드를 볼 수 있음
+- 실시간 스트림 데이터의 시각화 대시보드(**거래량, 가격 변동, 최근 구매 및 판매 내역**)
+- 배치 데이터의 시각화 대시보드(**최근 24시간 거래소 별 가격 및 거래량**)
 
 ## Kafka
 #### Kafka cluster
@@ -53,10 +59,3 @@
 | Tableau | 유료 | **O** | **O** |  
 | **Grafana** | **무료** | **O** | **O** |  
 | Kibana | **무료** | X | **O** |  
-
-## Coin Dashboard
-![coin_dashboard1](./image/coin_dashboard1.png)
-![coin_dashboard2](./image/coin_dashboard2.png)
-- 좌측 상단에서 특정 코인을 선택하면 해당 코인에 대한 시각화 대시보드를 볼 수 있음
-- 실시간 스트림 데이터의 시각화 대시보드(**거래량, 가격 변동, 최근 구매 및 판매 내역**)
-- 배치 데이터의 시각화 대시보드(**최근 24시간 거래소 별 가격 및 거래량**)
