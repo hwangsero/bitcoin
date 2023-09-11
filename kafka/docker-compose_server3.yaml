@@ -10,7 +10,7 @@ services:
     environment:
       ZOOKEEPER_SERVER_ID: 3
       ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_SERVERS: 192.168.127.38:2888:3888;192.168.127.35:2888:3888;0.0.0.0:2888:3888
+      ZOOKEEPER_SERVERS: 192.168.127.38:2888:3888;192.168.127.67:2888:3888;0.0.0.0:2888:3888
     volumes:
       - zookeeper_data:/var/lib/zookeeper/data
 
